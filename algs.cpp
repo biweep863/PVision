@@ -20,7 +20,7 @@ void girar(int directions[4][2]){
 }
 
 // USING DFS ALGORITHM FOR SOLVING A MID-SIZED MAZE ------------------------------------------------------
-void search(bool visited[3][5], int x, int y, int directions[4][2], int backstep[3][5], int& cnt, bool& pathFound){
+void DFS(bool visited[3][5], int x, int y, int directions[4][2], int backstep[3][5], int& cnt, bool& pathFound){
     visited[x][y] = true;
     if(pathFound == false){
         cnt++;
@@ -53,37 +53,6 @@ void search(bool visited[3][5], int x, int y, int directions[4][2], int backstep
         cnt--;
     }
 }
-void fuga(int cnt, int x, int y, int Mcolor, int directions[4][2], int backstep[3][5]){
-    bool foundColor = false;
-    for(int i = 1; i < cnt; i++){
-        if(foundColor == false){
-            if (col== Mcolor){
-                Mcolor = 30;
-                foundColor = true;
-            }
-        }
-        for (int j = 0; j < 4; j++){
-            int newX = x + directions[0][0];
-            int newY = y + directions[0][1];
-            if (newX >= 0 && newY >= 0 && newX < 3 && newY <5 && backstep[newX][newY] == i+1){
-                ahead();
-                j=4;
-                x = newX;
-                y = newY;
-            }else{
-                girar(directions);
-            }
-        }
-    }
-    //salir
-    for(int i = 0; i< 4; i++){
-        int newX = x + directions[0][0];
-        int newY = y + directions[0][1];
-        if(newX == 2 && newY == 5){
-            ahead();
-        }
-}
-}
 void zonaC() {
     ahead();
     //adelante, derecha, atras, izquierda
@@ -94,8 +63,7 @@ void zonaC() {
     bool pathFound = false;
     int Mcolor = 0;
     int start_x = 1, start_y = 0;
-    search(visited, start_x, start_y, directions, backstep, cnt, pathFound);
-    fuga(cnt, start_x, start_y, Mcolor, directions, backstep);
+    DFS(visited, start_x, start_y, directions, backstep, cnt, pathFound);
 }
 
 

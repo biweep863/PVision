@@ -14,7 +14,6 @@ struct Node {
     bool operator>(const Node &other) const {
         return dist > other.dist;  // For min-heap based on distance
     }
-
 };
 
 // Dijkstra's Algorithm for solving the maze
@@ -33,11 +32,12 @@ void dijkstra(int maze[3][5], pair<int, int> start, pair<int, int> end) {
     // Start point with 0 distance
     dist[start.first][start.second] = 0;
     pq.push(Node(start.first, start.second, 0));
-
+    // Dijkstra's algorithm
     while (!pq.empty()) {
+        // Get the current node
         Node current = pq.top();
         pq.pop();
-
+        // Get the coordinates and distance of the current node
         int x = current.x, y = current.y, d = current.dist;
 
         // If we reached the destination, print the distance and exit
@@ -45,7 +45,7 @@ void dijkstra(int maze[3][5], pair<int, int> start, pair<int, int> end) {
             cout << "Shortest distance from start to end: " << d << endl;
             return;
         }
-
+        
         // Explore the four possible directions (right, down, left, up)
         for (int i = 0; i < 4; ++i) {
             int nx = x + directions[i][0];
@@ -64,6 +64,8 @@ void dijkstra(int maze[3][5], pair<int, int> start, pair<int, int> end) {
 
     cout << "No path found from start to end." << endl;
 }
+
+// sample usage
 
 int main() {
     // Define the maze: 0 is free, 1 is wall
