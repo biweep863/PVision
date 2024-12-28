@@ -21,13 +21,13 @@ void dijkstra(int maze[3][5], pair<int, int> start, pair<int, int> end) {
     int rows = 3;
     int cols = 5;
     // Distance matrix initialized to infinity
-    int dist[3][5];
+    int dist[rows][cols];
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
             dist[i][j] = INT_MAX;
         }
     }
-    // Priority queue for the nodes to visit
+    // Descending priority queue for the nodes to visit
     priority_queue<Node, vector<Node>, greater<Node> > pq;
     // Start point with 0 distance
     dist[start.first][start.second] = 0;
@@ -39,6 +39,9 @@ void dijkstra(int maze[3][5], pair<int, int> start, pair<int, int> end) {
         pq.pop();
         // Get the coordinates and distance of the current node
         int x = current.x, y = current.y, d = current.dist;
+
+        // Print the current node being visited
+        cout << "Visiting node (" << x << ", " << y << ") with distance " << d << endl;
 
         // If we reached the destination, print the distance and exit
         if (x == end.first && y == end.second) {
@@ -70,9 +73,9 @@ void dijkstra(int maze[3][5], pair<int, int> start, pair<int, int> end) {
 int main() {
     // Define the maze: 0 is free, 1 is wall
     int maze[3][5] = {
-        {0, 1, 0, 0, 0},
-        {0, 1, 0, 1, 0},
-        {0, 0, 0, 1, 0}
+        {0, 1, 1, 0, 0},
+        {0, 0, 0, 0, 1},
+        {0, 1, 0, 0, 0}
     };
     pair<int, int> start = make_pair(0, 0);  // Start point (top-left corner)
     pair<int, int> end = make_pair(2, 4);    // End point (bottom-right corner) 
