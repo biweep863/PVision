@@ -1,9 +1,15 @@
-
 void ahead(){}
 void back(){}
 void left(){}
 void right(){}
 bool pared(){}
+int rows = 6;
+int cols = 12;
+
+void revisao(){
+    int directions[4][2] = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}};
+
+}
 
 void girar(int directions[4][2]){
     int tempx = directions[0][0];
@@ -16,26 +22,101 @@ void girar(int directions[4][2]){
     directions[3][1] = tempy;
     left();
 }
+bool cuadroNegro(){
+    //hacerlo con infrarrojos
+    //SE PUEDE?? 
+    ahead(0.3);
+    int col= getcolor();
+    back(0.3);
+    if(col == 4){
+    return true; 
+    }else{
+        return false;
+    }
+}
+int colorDet(int colors[3]){
+    int col = getcolor() -1;
+    colors[col]++; 
+    return 0;
+}
 
-// DFS algorithm
-void DFS(bool visited[rows][cols], int x, int y, int directions[4][2], int rows, int cols){
+// arriba, izquierda, abajo, derecha
+void search(bool visited[row][cols], int x, int y, int directions[4][2], int colors[3], int backstep[5][3], int& count, bool& pathFound){
+    colorDet(colors);
     visited[x][y] = true;
-    
+    if(!pathFound){
+        count++;
+        backstep[x][y] = count;
+    }
+    if(x== rows-1 && y == cols-1){
+        pathFound = true; 
+    }
     for (int i = 0; i<4; i++){
         int newX = x + directions[0][0];
         int newY = y + directions[0][1];
-        // Serial.println(newY);
-        // delay(100);
-        if((newX >= 0 && newY >= 0 && newX<rows && newY <cols) && (paredAdelante() == false) && visited[newX][newY] == false){
-            ahead();
-            if(lineaNegra == false){
-                DFS(visited, newX, newY, directions, backstep, cnt, pathFound);
-                back();
+        if((newX >= 0 && newY >=0 && newX<=rows && newY <= cols) && (paredAdelante() == false)){
+            for(int j = 0; j< i-; j++){
+                left();
             }
-            else{
-                visited[newX][newY] = true;
-            }
-        }
+            bool negro = cuadroNegro();
+            if(negro == false){
+                if(visited[newX][newY] == false){
+                    ahead(1);
+                    search(visited, newX, newY, directions, colors, backstep, count, pathFound);
+                    back(1);
+                }
+            }else{
+                visited[newX][newY] = true; 
+            } 
+        }             
         girar(directions);
     }
+    if(!pathFound){
+        backstep[x][y] = 30;
+        count--;
+    }
+}
+void fuga(int count, int x, int y, int Mcolor, bool foundColor, int directions[4][2], int backstep[5][3]){
+    for(int i = 0; i < count; i++){
+        if(!foundColor){
+            if(getcolor() == Mcolor){
+                //encenderLed
+                //print Mcolor
+                Mcolor = 30;
+            }
+        }
+        for (int j = 0; j < 4; j++){
+            int newX = x + directions[0][0];
+            int newY = y + directions[0][1];
+            if (newX >= 0 && newY >= 0 && newX < 5 && newY < 3 && backstep[newX][newY] == i+1){
+                ahead(1);
+                j=4;
+            }else{
+                girar(directions);
+            }
+        }
+    }
+    ahead(1);
+}
+void zonaB() {
+    //adelante, izquierda, atras, derecha
+    int directions[4][2] = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}};
+
+    bool visited[5][3] = {{false}}; 
+    int backstep[5][3] = {{30}}; 
+    int count = 0;
+    // punto inicial
+    int start_x = 0, start_y = 0;
+    int colors[3] = {0};
+    bool pathFound = false;
+    search(visited, start_x, start_y, directions, colors, backstep, count, pathFound);
+    bool foundColor = false;
+    int Mcolor= 0; 
+    for(int i=0; i< 3-1; i++){
+        if(colors[i] < colors[i+1]){
+            Mcolor = i+1;
+        }
+    }
+
+    fuga(count, start_x, start_y, Mcolor, foundColor, directions, backstep);
 }
